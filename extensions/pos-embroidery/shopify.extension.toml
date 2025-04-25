@@ -4,10 +4,10 @@ api_version = "2025-04"
 
 [[extensions]]
 type = "ui_extension"
-name = "pos-embroidery"
+name = "Threadkind Customizer"
 
-handle = "pos-embroidery"
-description = "A react POS UI extension"
+handle = "threadkind-customizer"
+description = "Threadkind Product Customizer"
 
 # Controls where in POS your extension will be injected,
 # and the file that contains your extension’s source code.

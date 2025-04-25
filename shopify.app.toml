@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "0351e38550ed2226f416e6314c957c55"
-name = "pos-embroidery"
-handle = "pos-embroidery"
+name = "Threadkind Customizer"
+handle = "threadkind-customizer"
 application_url = "https://shopify.dev/apps/default-app-home"
 embedded = true
 
