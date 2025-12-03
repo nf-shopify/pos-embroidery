@@ -118,7 +118,7 @@ The Shopify CLI will:
 **Testing on POS:**
 - Install the Shopify POS app on your mobile device or tablet
 - Log in to your development store
-- The "Kindthread Customizer" tile will appear on the home screen
+- The "Embroidery Customizer" tile will appear on the home screen
 
 ## How It Works
 
