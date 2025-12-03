@@ -1,10 +1,10 @@
-# Threadkind Customizer
+# Embroidery Customizer
 
 A Shopify POS extension that enables merchants to offer personalized embroidery customization services directly at the point of sale. This extension-only app allows staff to capture embroidery details (placement and monogram) for cart items during checkout.
 
 ## Overview
 
-The Threadkind Customizer integrates seamlessly into Shopify POS, providing:
+The Embroidery Customizer integrates seamlessly into Shopify POS, providing:
 
 - **Home Screen Tile**: A button on the POS home screen that opens the customization interface
 - **Multi-Screen Modal**: An intuitive interface for selecting items and adding embroidery details
@@ -13,7 +13,7 @@ The Threadkind Customizer integrates seamlessly into Shopify POS, providing:
 ## Features
 
 ### 1. POS Home Tile
-- Displays "Kindthread Customizer" button on the POS home screen
+- Displays "Embroidery Customizer" button on the POS home screen
 - Shows contextual subtitle: "Add Embroidery" or "No items in cart"
 - Automatically enables/disables based on cart contents
 - One-tap access to customization interface

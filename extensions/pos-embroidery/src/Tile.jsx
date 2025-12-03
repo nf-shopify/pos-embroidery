@@ -9,7 +9,7 @@ const TileComponent = () => {
 
   return (
     <Tile
-      title="Kindthread Customizer"
+      title="Embroidery Customizer"
       subtitle={enabled ? "Add Embroidery" : "No items in cart"}
       onPress={() => {api.action.presentModal()}}
       enabled={enabled}
