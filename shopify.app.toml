@@ -20,4 +20,4 @@ scopes = ""
 redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
 
 [pos]
-embedded = false
+embedded = true

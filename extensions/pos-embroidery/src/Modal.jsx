@@ -124,8 +124,8 @@ const Modal = () => {
             onPress={() => {
               try {
                 api.cart.addLineItemProperties(selectedItem, {
-                  Placement: placement,
-                  Monogram: monogram,
+                  Embroidery_Placement: placement,
+                  Embroidery_Monogram: monogram,
                 });
                 api.toast.show("Embroidery added to item");
               } catch (error) {

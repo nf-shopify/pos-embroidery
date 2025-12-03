@@ -1,78 +1,293 @@
-# Shopify App Template - Extension only
+# Threadkind Customizer
 
-This is a template for building an [extension-only Shopify app](https://shopify.dev/docs/apps/build/app-extensions/build-extension-only-app). It contains the basics for building a Shopify app that uses only app extensions.
+A Shopify POS extension that enables merchants to offer personalized embroidery customization services directly at the point of sale. This extension-only app allows staff to capture embroidery details (placement and monogram) for cart items during checkout.
 
-This template doesn't include a server or the ability to embed a page in the Shopify Admin. If you want either of these capabilities, choose the [Remix app template](https://github.com/Shopify/shopify-app-template-remix) instead.
+## Overview
 
-Whether you choose to use this template or another one, you can use your preferred package manager and the Shopify CLI with [these steps](#installing-the-template).
+The Threadkind Customizer integrates seamlessly into Shopify POS, providing:
 
-## Benefits
+- **Home Screen Tile**: A button on the POS home screen that opens the customization interface
+- **Multi-Screen Modal**: An intuitive interface for selecting items and adding embroidery details
+- **Line Item Properties**: Captures and stores embroidery specifications as line item properties in the cart
 
-Shopify apps are built on a variety of Shopify tools to create a great merchant experience. The [create an app](https://shopify.dev/docs/apps/getting-started/create) tutorial in our developer documentation will guide you through creating a Shopify app.
+## Features
 
-This app template does little more than install the CLI and scaffold a repository.
+### 1. POS Home Tile
+- Displays "Kindthread Customizer" button on the POS home screen
+- Shows contextual subtitle: "Add Embroidery" or "No items in cart"
+- Automatically enables/disables based on cart contents
+- One-tap access to customization interface
 
-## Getting started
+### 2. Item Selection Screen
+- Lists all items currently in the shopping cart
+- Shows product images and variant options
+- Allows staff to select which item needs embroidery
+- Visual product preview for easy identification
 
-### Requirements
+### 3. Embroidery Customization Screen
+- **Placement Field**: Capture where the embroidery should be placed (e.g., "Left Chest", "Back", "Sleeve")
+- **Monogram Field**: Capture the text/initials to embroider (e.g., "N.D.F", "ABC")
+- **Add Embroidery Button**: Saves customization to the selected cart item
+- **Success/Error Feedback**: Toast notifications confirm action completion
 
-1. You must [download and install Node.js](https://nodejs.org/en/download/) if you don't already have it.
-1. You must [create a Shopify partner account](https://partners.shopify.com/signup) if you don’t have one.
-1. You must create a store for testing if you don't have one, either a [development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) or a [Shopify Plus sandbox store](https://help.shopify.com/en/partners/dashboard/managing-stores/plus-sandbox-store).
+### 4. Data Persistence
+- Embroidery details are saved as line item properties:
+  - `Embroidery_Placement`: Stores the placement value
+  - `Embroidery_Monogram`: Stores the monogram text
+- Properties carry through to order fulfillment
+- Visible in Shopify Admin order details
 
-### Installing the template
+## Project Structure
 
-This template can be installed using your preferred package manager:
-
-Using yarn:
-
-```shell
-yarn create @shopify/app
+```
+pos-embroidery/
+├── extensions/
+│   └── pos-embroidery/
+│       ├── src/
+│       │   ├── Tile.jsx          # POS home screen tile component
+│       │   └── Modal.jsx         # Embroidery customization modal
+│       ├── package.json          # Extension dependencies
+│       └── shopify.extension.toml # Extension configuration
+├── package.json                  # Root project configuration
+├── shopify.app.toml             # App configuration
+└── README.md                    # This file
 ```
 
-Using npm:
+## Prerequisites
 
-```shell
-npm init @shopify/app@latest
+Before you begin, ensure you have:
+
+1. **Node.js** (Download from [nodejs.org](https://nodejs.org/en/download/))
+2. **Shopify Partner Account** ([Create account](https://partners.shopify.com/signup))
+3. **Development Store** with POS enabled:
+   - [Development Store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) or
+   - [Shopify Plus Sandbox Store](https://help.shopify.com/en/partners/dashboard/managing-stores/plus-sandbox-store)
+4. **Shopify CLI** (Installed automatically with this project)
+
+## Installation
+
+Clone this repository and install dependencies:
+
+### Using npm:
+```bash
+git clone <repository-url>
+cd pos-embroidery
+npm install
 ```
 
-Using pnpm:
-
-```shell
-pnpm create @shopify/app@latest
+### Using yarn:
+```bash
+git clone <repository-url>
+cd pos-embroidery
+yarn install
 ```
 
-This will clone the template and install the required dependencies.
-
-#### Local Development
-
-[The Shopify CLI](https://shopify.dev/docs/apps/tools/cli) connects to an app in your Partners dashboard. It provides environment variables and runs commands in parallel.
-
-You can develop locally using your preferred package manager. Run one of the following commands from the root of your app.
-
-Using yarn:
-
-```shell
-yarn dev
+### Using pnpm:
+```bash
+git clone <repository-url>
+cd pos-embroidery
+pnpm install
 ```
 
-Using npm:
+## Local Development
 
-```shell
+Start the development server:
+
+### Using npm:
+```bash
 npm run dev
 ```
 
-Using pnpm:
+### Using yarn:
+```bash
+yarn dev
+```
 
-```shell
+### Using pnpm:
+```bash
 pnpm run dev
 ```
 
-Open the URL generated in your console. Once you grant permission to the app, you can start development (such as generating extensions).
+The Shopify CLI will:
+1. Connect to your Partner Dashboard app
+2. Generate a development URL
+3. Open your browser for authorization
+4. Start watching for file changes
+5. Hot-reload your extension in POS
 
-## Developer resources
+**Testing on POS:**
+- Install the Shopify POS app on your mobile device or tablet
+- Log in to your development store
+- The "Kindthread Customizer" tile will appear on the home screen
 
-- [Introduction to Shopify apps](https://shopify.dev/docs/apps/getting-started)
-- [App extensions](https://shopify.dev/docs/apps/build/app-extensions)
-- [Extension only apps](https://shopify.dev/docs/apps/build/app-extensions/build-extension-only-app)
-- [Shopify CLI](https://shopify.dev/docs/apps/tools/cli)
+## How It Works
+
+### Technical Implementation
+
+#### Tile Component (`Tile.jsx`)
+```javascript
+// Monitors cart state in real-time
+const cart = useCartSubscription();
+const enabled = cart.lineItems.length;
+
+// Opens modal when pressed
+onPress={() => {api.action.presentModal()}}
+```
+
+#### Modal Component (`Modal.jsx`)
+
+**1. Product Data Enrichment**
+- Fetches variant data using `api.productSearch.fetchProductVariantsWithIds()`
+- Enriches cart items with product images and variant options
+- Displays items with visual preview
+
+**2. Multi-Screen Navigation**
+- **Screen 1**: Item selection list
+- **Screen 2**: Embroidery customization form
+- Navigator manages screen transitions
+
+**3. Data Capture & Storage**
+```javascript
+api.cart.addLineItemProperties(selectedItem, {
+  Embroidery_Placement: placement,
+  Embroidery_Monogram: monogram,
+});
+```
+
+### API Integration
+
+This extension uses the Shopify UI Extensions API (`@shopify/ui-extensions-react/point-of-sale`):
+
+- **Cart API**: `useCartSubscription()` - Real-time cart monitoring
+- **Navigation API**: `api.navigation.navigate()` - Screen transitions
+- **Product Search API**: `fetchProductVariantsWithIds()` - Product data retrieval
+- **Toast API**: `api.toast.show()` - User feedback notifications
+- **Line Item API**: `addLineItemProperties()` - Save customization data
+
+## Configuration
+
+### App Configuration (`shopify.app.toml`)
+```toml
+name = "Threadkind Customizer"
+handle = "threadkind-customizer"
+client_id = "0351e38550ed2226f416e6314c957c55"
+application_url = "https://shopify.dev/apps/default-app-home"
+embedded = true
+
+[pos]
+embedded = true
+```
+
+### Extension Configuration (`extensions/pos-embroidery/shopify.extension.toml`)
+- **Extension Type**: UI Extension
+- **API Version**: 2025-04
+- **Targets**:
+  - `pos.home.tile.render` → Tile.jsx
+  - `pos.home.modal.render` → Modal.jsx
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build extension for production |
+| `npm run deploy` | Deploy extension to Shopify |
+| `npm run info` | Display app information |
+| `npm run generate` | Generate new app components |
+
+## Deployment
+
+Deploy your extension to production:
+
+```bash
+npm run deploy
+```
+
+Follow the CLI prompts to:
+1. Select deployment target (production)
+2. Confirm extension configuration
+3. Push to Shopify
+
+After deployment, install the app on your production store from the Partner Dashboard.
+
+## Customization
+
+### Modifying Embroidery Fields
+
+Edit `/extensions/pos-embroidery/src/Modal.jsx` to add or modify fields:
+
+```javascript
+// Add new field
+const [color, setColor] = useState('');
+
+<TextField
+  label="Thread Color"
+  placeholder="Navy Blue"
+  value={color}
+  onChange={setColor}
+/>
+
+// Save to line item properties
+api.cart.addLineItemProperties(selectedItem, {
+  Embroidery_Placement: placement,
+  Embroidery_Monogram: monogram,
+  Embroidery_Color: color,  // New field
+});
+```
+
+### Changing Tile Appearance
+
+Edit `/extensions/pos-embroidery/src/Tile.jsx` to customize the home screen tile:
+
+```javascript
+<Tile
+  title="Your Custom Title"
+  subtitle="Your custom subtitle"
+  // Add icon, change colors, etc.
+/>
+```
+
+## Troubleshooting
+
+### Extension Not Appearing in POS
+1. Ensure POS is enabled in `shopify.app.toml` (`[pos] embedded = true`)
+2. Verify extension targets in `shopify.extension.toml`
+3. Restart the POS app completely
+4. Check development store has POS channel enabled
+
+### Cart Items Not Loading
+- Verify items are in the cart before opening the extension
+- Check browser console for API errors
+- Ensure product variants have valid IDs
+
+### Line Item Properties Not Saving
+- Confirm property keys don't contain spaces (use underscores)
+- Check API permissions in Partner Dashboard
+- Verify toast notifications for error messages
+
+## Developer Resources
+
+- [Shopify POS UI Extensions](https://shopify.dev/docs/api/pos-ui-extensions)
+- [UI Extensions React Components](https://shopify.dev/docs/api/pos-ui-extensions/components)
+- [Extension-Only Apps](https://shopify.dev/docs/apps/build/app-extensions/build-extension-only-app)
+- [Shopify CLI Documentation](https://shopify.dev/docs/apps/tools/cli)
+- [Line Item Properties](https://shopify.dev/docs/api/pos-ui-extensions/apis/cart#methods)
+
+## License
+
+UNLICENSED - Private project
+
+## Author
+
+neilsonflemming
+
+---
+
+## Version History
+
+### 1.0.0 (Current)
+- Initial release
+- POS home tile integration
+- Item selection interface
+- Embroidery customization (placement + monogram)
+- Line item properties storage
